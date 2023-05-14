@@ -103,9 +103,11 @@ const app = http.createServer(function (req, res) {
       const post = qs.parse(body);
       const title = post.title;
       const description = post.description;
+      fs.writeFile(`data/${title}`, description, "utf8", function (err) {
+        res.writeHead(302, { Location: `/?id=${title}` });
+        res.end();
+      });
     });
-    res.writeHead(200);
-    res.end("success");
   } else {
     res.writeHead(404);
     res.end("Not Found");

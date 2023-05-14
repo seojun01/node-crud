@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const url = require("url");
+const qs = require("querystring");
 
 //HTML 템플릿 렌더링 함수
 //title, list, body 값 받음.
@@ -93,6 +94,18 @@ const app = http.createServer(function (req, res) {
       res.writeHead(200);
       res.end(template);
     });
+  } else if (pathname === "/process_create") {
+    let body = "";
+    req.on("data", function (data) {
+      body = body + data;
+    });
+    req.on("end", function () {
+      const post = qs.parse(body);
+      const title = post.title;
+      const description = post.description;
+    });
+    res.writeHead(200);
+    res.end("success");
   } else {
     res.writeHead(404);
     res.end("Not Found");

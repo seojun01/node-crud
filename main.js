@@ -5,7 +5,7 @@ const qs = require("querystring");
 
 //HTML 템플릿 렌더링 함수
 //title, list, body 값 받음.
-function templateHTML(title, list, body) {
+function templateHTML(title, list, body, control) {
   return `
     <!doctype html>
     <html>
@@ -16,7 +16,7 @@ function templateHTML(title, list, body) {
     <body>
         <h1><a href="/">WEB</a></h1>
         ${list}
-        <a href="/create">create</a>
+        ${control}
         ${body}
     </body>
     </html>
@@ -48,7 +48,8 @@ const app = http.createServer(function (req, res) {
         const template = templateHTML(
           title,
           list,
-          `<h2>${title}</h2>${description}`
+          `<h2>${title}</h2>${description}`,
+          `<a href="/create">create</a>`
         );
         res.writeHead(200);
         res.end(template);
@@ -64,7 +65,8 @@ const app = http.createServer(function (req, res) {
             const template = templateHTML(
               title,
               list,
-              `<h2>${title}</h2>${description}`
+              `<h2>${title}</h2>${description}`,
+              `<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
             );
             res.writeHead(200);
             res.end(template);
@@ -89,7 +91,8 @@ const app = http.createServer(function (req, res) {
                         <input type="submit" />
                     </p>
                 </form>
-                `
+                `,
+        ""
       );
       res.writeHead(200);
       res.end(template);

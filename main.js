@@ -82,7 +82,7 @@ const app = http.createServer(function (req, res) {
         title,
         list,
         `
-                <form action="http://localhost:3000/process_create" method=post>
+                <form action="/process_create" method=post>
                     <p><input type="text" name="title" placeholder="title"></p>
                     <p>
                         <textarea name="description" placeholder="description"></textarea>
@@ -109,6 +109,32 @@ const app = http.createServer(function (req, res) {
       fs.writeFile(`data/${title}`, description, "utf8", function (err) {
         res.writeHead(302, { Location: `/?id=${title}` });
         res.end();
+      });
+    });
+  } else if (pathname === "/update") {
+    fs.readdir("./data", function (error, filelist) {
+      fs.readFile(`data/${queryData.id}`, "utf8", function (err, description) {
+        const title = queryData.id;
+        const list = templateList(filelist);
+        const template = templateHTML(
+          title,
+          list,
+          `
+          <form action="/update_process" method="post">
+            <input type="hidden" name="id" value="${title}">
+            <p><input type="text" name="title" placeholder="title" value="${title}"></p>
+            <p>
+              <textarea name="description" placeholder="description">${description}</textarea>
+            </p>
+            <p>
+              <input type="submit" />
+            </p>
+          </form>
+          `,
+          `<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
+        );
+        res.writeHead(200);
+        res.end(template);
       });
     });
   } else {
